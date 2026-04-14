@@ -19,7 +19,7 @@
 ## 🚀 วิธีการใช้งาน
 
 คุณสามารถดูคู่มือการใช้งานฉบับเต็มได้ที่: 
-👉 **[api.nearbyshop.xyz/slipVerify](https://api.nearbyshop.xyz/slipVerify)**
+👉 **[api.nearbyshop.xyz/slipVerify](https://api.nearbyshop.xyz)**
 
 ### ช่องทางการเข้าถึงระบบ:
 - **API Endpoint**: [https://api.nearbyshop.xyz](https://api.nearbyshop.xyz)
