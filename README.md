@@ -59,4 +59,4 @@
 - **Discord**: [Join Server](https://discord.gg/VMr2pqukDX)
 
 ---
-*Created by NearByShop Team*
+*Created by xNearbyTeam*
