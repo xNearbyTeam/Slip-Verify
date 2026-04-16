@@ -19,10 +19,10 @@
 ## 🚀 วิธีการใช้งาน
 
 คุณสามารถดูคู่มือการใช้งานฉบับเต็มได้ที่: 
-👉 **[api.nearbyshop.xyz](https://api.nearbyshop.xyz)**
+👉 **[docs.nearbyshop.xyz](https://docs.nearbyshop.xyz)**
 
 ### ช่องทางการเข้าถึงระบบ:
-- **API Endpoint**: [https://api.nearbyshop.xyz](https://api.nearbyshop.xyz)
+- **API Endpoint**: [https://api.nearbyshop.xyz](https://docs.nearbyshop.xyz)
 - **Main Website**: [https://nearbyshop.xyz](https://nearbyshop.xyz)
 
 ---
@@ -55,7 +55,7 @@
 
 ## 🤝 สนับสนุนและติดต่อ
 - **Website**: [nearbyshop.xyz](https://nearbyshop.xyz)
-- **API Docs**: [api.nearbyshop.xyz](https://api.nearbyshop.xyz/slipVerify)
+- **API Docs**: [api.nearbyshop.xyz](https://docs.nearbyshop.xyz)
 - **Discord**: [Join Server](https://discord.gg/VMr2pqukDX)
 
 ---
