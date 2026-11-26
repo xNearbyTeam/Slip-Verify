@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrueMoney Wallet API - xNearby Docs</title>
+    <meta name="description" content="คู่มือการใช้งาน TrueMoney Wallet Voucher API สำหรับตรวจสอบและกดรับซองของขวัญอัตโนมัติ">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Mobile Header -->
+        <header class="mobile-nav">
+            <div class="logo-small">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <path d="M9 12l2 2 4-4"></path>
+                    </svg>
+                </div>
+                <span>xNearby APIs</span>
+            </div>
+            <button id="menu-toggle" class="menu-btn" aria-label="Toggle Menu">
+                <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </header>
+
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar"></aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+
+            <header class="section-header">
+                <h1>TrueMoney Wallet API 🎁</h1>
+                <p class="subtitle">ระบบตรวจสอบข้อมูลและกดรับเงินจากซองของขวัญ (Voucher / อั่งเปา) TrueMoney Wallet อัตโนมัติ</p>
+            </header>
+
+            <!-- Endpoint: /tmn/verify -->
+            <section id="tmn-verify" class="doc-section">
+                <div class="endpoint-header">
+                    <span class="badge post-large">POST</span>
+                    <h2>/tmn/verify</h2>
+                    <span class="badge recommended" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">🔍 ตรวจสอบซอง</span>
+                </div>
+                <p>ตรวจสอบข้อมูลซองของขวัญ TrueMoney Wallet เพื่อดูยอดเงินรวม, ชื่อผู้สร้างซอง, จำนวนคนที่รับได้ และสถานะความถูกต้อง <strong>โดยที่ยังไม่กดรับเงินจริง</strong></p>
+
+                <div class="grid-layout">
+                    <div class="grid-left">
+                        <h3>พารามิเตอร์ (JSON / Form-Data)</h3>
+                        <div class="param-table-container">
+                            <table class="param-table">
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>voucher</code> <span class="badge required">จำเป็น</span></td>
+                                        <td><span class="param-type">String</span></td>
+                                        <td>ลิงก์ซองของขวัญเต็ม (เช่น <code>https://gift.truemoney.com/campaign/?v=xxxxxx</code>) หรือรหัส hash ท้ายลิงก์</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>phone</code> <span class="badge required">จำเป็น</span></td>
+                                        <td><span class="param-type">String</span></td>
+                                        <td>เบอร์โทรศัพท์ TrueMoney Wallet 10 หลัก (เช่น <code>"0812345678"</code>)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="auth-requirement">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>จำเป็นต้องระบุ <code>X-API-Key</code> (สิทธิ์ <code>tmn</code>)</span>
+                        </div>
+                    </div>
+
+                    <div class="grid-right">
+                        <div class="request-tabs">
+                            <button class="tab-btn active" data-target="tmn-verify-curl">cURL</button>
+                            <button class="tab-btn" data-target="tmn-verify-node">Node.js</button>
+                            <button class="tab-btn" data-target="tmn-verify-python">Python</button>
+                            <button class="tab-btn" data-target="tmn-verify-php">PHP</button>
+                        </div>
+
+                        <!-- cURL Tab -->
+                        <div class="code-window tab-content active" id="tmn-verify-curl">
+                            <div class="window-header">
+                                <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                                <span class="window-title">cURL</span>
+                                <button class="copy-btn" data-clipboard='curl -X POST https://api.nearbyshop.xyz/tmn/verify \
+  -H "X-API-Key: nb_live_your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d "{\"voucher\": \"https://gift.truemoney.com/campaign/?v=a1b2c3d4e5\", \"phone\": \"0812345678\"}"'>Copy</button>
+                            </div>
+                            <pre><code class="language-bash">curl -X POST https://api.nearbyshop.xyz/tmn/verify \
+  -H "X-API-Key: nb_live_your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{"voucher": "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5", "phone": "0812345678"}'</code></pre>
+                        </div>
+
+                        <!-- Node.js Tab -->
+                        <div class="code-window tab-content" id="tmn-verify-node">
+                            <div class="window-header">
+                                <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                                <span class="window-title">Node.js (Axios)</span>
+                                <button class="copy-btn" data-clipboard='const axios = require("axios");
+
+async function checkVoucher() {
+  const response = await axios.post("https://api.nearbyshop.xyz/tmn/verify", {
+    voucher: "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+    phone: "0812345678"
+  }, {
+    headers: { "X-API-Key": "nb_live_your_api_key_here" }
+  });
+
+  console.log(response.data);
+}
+
+checkVoucher();'>Copy</button>
+                            </div>
+                            <pre><code class="language-javascript">const axios = require('axios');
+
+async function checkVoucher() {
+  try {
+    const response = await axios.post('https://api.nearbyshop.xyz/tmn/verify', {
+      voucher: 'https://gift.truemoney.com/campaign/?v=a1b2c3d4e5',
+      phone: '0812345678'
+    }, {
+      headers: { 'X-API-Key': 'nb_live_your_api_key_here' }
+    });
+
+    console.log(response.data);
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+  }
+}
+
+checkVoucher();</code></pre>
+                        </div>
+
+                        <!-- Python Tab -->
+                        <div class="code-window tab-content" id="tmn-verify-python">
+                            <div class="window-header">
+                                <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                                <span class="window-title">Python (Requests)</span>
+                                <button class="copy-btn" data-clipboard='import requests
+
+url = "https://api.nearbyshop.xyz/tmn/verify"
+headers = {"X-API-Key": "nb_live_your_api_key_here"}
+payload = {
+    "voucher": "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+    "phone": "0812345678"
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())'>Copy</button>
+                            </div>
+                            <pre><code class="language-python">import requests
+
+url = "https://api.nearbyshop.xyz/tmn/verify"
+headers = {"X-API-Key": "nb_live_your_api_key_here"}
+payload = {
+    "voucher": "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+    "phone": "0812345678"
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())</code></pre>
+                        </div>
+
+                        <!-- PHP Tab -->
+                        <div class="code-window tab-content" id="tmn-verify-php">
+                            <div class="window-header">
+                                <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                                <span class="window-title">PHP (cURL)</span>
+                                <button class="copy-btn" data-clipboard='<?php
+$curl = curl_init();
+curl_setopt_array($curl, [
+    CURLOPT_URL => "https://api.nearbyshop.xyz/tmn/verify",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => [
+        "X-API-Key: nb_live_your_api_key_here",
+        "Content-Type: application/json"
+    ],
+    CURLOPT_POSTFIELDS => json_encode([
+        "voucher" => "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+        "phone" => "0812345678"
+    ])
+]);
+$response = curl_exec($curl);
+curl_close($curl);
+echo $response;
+?>'>Copy</button>
+                            </div>
+                            <pre><code class="language-php">&lt;?php
+$curl = curl_init();
+curl_setopt_array($curl, [
+    CURLOPT_URL => "https://api.nearbyshop.xyz/tmn/verify",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => [
+        "X-API-Key: nb_live_your_api_key_here",
+        "Content-Type: application/json"
+    ],
+    CURLOPT_POSTFIELDS => json_encode([
+        "voucher" => "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+        "phone" => "0812345678"
+    ])
+]);
+$response = curl_exec($curl);
+curl_close($curl);
+echo $response;
+?&gt;</code></pre>
+                        </div>
+
+                        <!-- Response Preview -->
+                        <h4>ตัวอย่างผลลัพธ์ (Response 200 OK)</h4>
+                        <div class="code-window">
+                            <div class="window-header">
+                                <div class="window-dots">
+                                    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                                </div>
+                                <span class="window-title">JSON Response (200 OK)</span>
+                                <button class="copy-btn" data-clipboard='{
+  "status": "success",
+  "success": true,
+  "data": {
+    "voucher_hash": "a1b2c3d4e5",
+    "owner_name": "สมชาย ใจดี",
+    "amount": "100.00",
+    "total_amount": "100.00",
+    "available_tickets": 1,
+    "redeemed_tickets": 0,
+    "is_expired": false,
+    "status": "ACTIVE"
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code class="language-json">{
+  "status": "success",
+  "success": true,
+  "data": {
+    "voucher_hash": "a1b2c3d4e5",
+    "owner_name": "สมชาย ใจดี",
+    "amount": "100.00",
+    "total_amount": "100.00",
+    "available_tickets": 1,
+    "redeemed_tickets": 0,
+    "is_expired": false,
+    "status": "ACTIVE"
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Endpoint: /tmn/redeem -->
+            <section id="tmn-redeem" class="doc-section">
+                <div class="endpoint-header">
+                    <span class="badge post-large">POST</span>
+                    <h2>/tmn/redeem</h2>
+                    <span class="badge recommended" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">💰 กดรับเงินเข้าเบอร์</span>
+                </div>
+                <p>กดรับเงินจากซองของขวัญ TrueMoney Wallet โอนเข้าเบอร์โทรศัพท์ที่ระบุทันที พร้อมรองรับโหมดจำลองการทำงาน (<code>dryRun: true</code>) เพื่อทดสอบระบบโดยไม่กดรับเงินจริง</p>
+
+                <div class="grid-layout">
+                    <div class="grid-left">
+                        <h3>พารามิเตอร์ (JSON / Form-Data)</h3>
+                        <div class="param-table-container">
+                            <table class="param-table">
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>voucher</code> <span class="badge required">จำเป็น</span></td>
+                                        <td><span class="param-type">String</span></td>
+                                        <td>ลิงก์ซองของขวัญเต็ม หรือรหัส hash ท้ายลิงก์</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>phone</code> <span class="badge required">จำเป็น</span></td>
+                                        <td><span class="param-type">String</span></td>
+                                        <td>เบอร์โทรศัพท์ TrueMoney Wallet 10 หลักที่จะให้เงินเข้า</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>dryRun</code> <span class="badge optional">ไม่บังคับ</span></td>
+                                        <td><span class="param-type">Boolean</span></td>
+                                        <td>ใส่ <code>true</code> หากต้องการทดสอบระบบโดยยังไม่กดรับเงินจริง (Default: <code>false</code>)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="auth-requirement">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>จำเป็นต้องระบุ <code>X-API-Key</code> (สิทธิ์ <code>tmn</code>)</span>
+                        </div>
+                    </div>
+
+                    <div class="grid-right">
+                        <div class="request-tabs">
+                            <button class="tab-btn active" data-target="tmn-redeem-curl">cURL</button>
+                            <button class="tab-btn" data-target="tmn-redeem-node">Node.js</button>
+                            <button class="tab-btn" data-target="tmn-redeem-python">Python</button>
+                            <button class="tab-btn" data-target="tmn-redeem-php">PHP</button>
+                        </div>
+
+                        <!-- cURL Tab -->
+                        <div class="code-window tab-content active" id="tmn-redeem-curl">
+                            <div class="window-header">
+                                <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                                <span class="window-title">cURL</span>
+                                <button class="copy-btn" data-clipboard='curl -X POST https://api.nearbyshop.xyz/tmn/redeem \
+  -H "X-API-Key: nb_live_your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d "{\"voucher\": \"https://gift.truemoney.com/campaign/?v=a1b2c3d4e5\", \"phone\": \"0812345678\"}"'>Copy</button>
+                            </div>
+                            <pre><code class="language-bash">curl -X POST https://api.nearbyshop.xyz/tmn/redeem \
+  -H "X-API-Key: nb_live_your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{"voucher": "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5", "phone": "0812345678"}'</code></pre>
+                        </div>
+
+                        <!-- Node.js Tab -->
+                        <div class="code-window tab-content" id="tmn-redeem-node">
+                            <div class="window-header">
+                                <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                                <span class="window-title">Node.js (Axios)</span>
+                                <button class="copy-btn" data-clipboard='const axios = require("axios");
+
+async function redeemVoucher() {
+  const response = await axios.post("https://api.nearbyshop.xyz/tmn/redeem", {
+    voucher: "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+    phone: "0812345678"
+  }, {
+    headers: { "X-API-Key": "nb_live_your_api_key_here" }
+  });
+
+  console.log(response.data);
+}
+
+redeemVoucher();'>Copy</button>
+                            </div>
+                            <pre><code class="language-javascript">const axios = require('axios');
+
+async function redeemVoucher() {
+  try {
+    const response = await axios.post('https://api.nearbyshop.xyz/tmn/redeem', {
+      voucher: 'https://gift.truemoney.com/campaign/?v=a1b2c3d4e5',
+      phone: '0812345678'
+    }, {
+      headers: { 'X-API-Key': 'nb_live_your_api_key_here' }
+    });
+
+    console.log(response.data);
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+  }
+}
+
+redeemVoucher();</code></pre>
+                        </div>
+
+                        <!-- Python Tab -->
+                        <div class="code-window tab-content" id="tmn-redeem-python">
+                            <div class="window-header">
+                                <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                                <span class="window-title">Python (Requests)</span>
+                                <button class="copy-btn" data-clipboard='import requests
+
+url = "https://api.nearbyshop.xyz/tmn/redeem"
+headers = {"X-API-Key": "nb_live_your_api_key_here"}
+payload = {
+    "voucher": "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+    "phone": "0812345678"
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())'>Copy</button>
+                            </div>
+                            <pre><code class="language-python">import requests
+
+url = "https://api.nearbyshop.xyz/tmn/redeem"
+headers = {"X-API-Key": "nb_live_your_api_key_here"}
+payload = {
+    "voucher": "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+    "phone": "0812345678"
+}
+
+response = requests.post(url, json=payload, headers=headers)
+print(response.json())</code></pre>
+                        </div>
+
+                        <!-- PHP Tab -->
+                        <div class="code-window tab-content" id="tmn-redeem-php">
+                            <div class="window-header">
+                                <div class="window-dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                                <span class="window-title">PHP (cURL)</span>
+                                <button class="copy-btn" data-clipboard='<?php
+$curl = curl_init();
+curl_setopt_array($curl, [
+    CURLOPT_URL => "https://api.nearbyshop.xyz/tmn/redeem",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => [
+        "X-API-Key: nb_live_your_api_key_here",
+        "Content-Type: application/json"
+    ],
+    CURLOPT_POSTFIELDS => json_encode([
+        "voucher" => "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+        "phone" => "0812345678"
+    ])
+]);
+$response = curl_exec($curl);
+curl_close($curl);
+echo $response;
+?>'>Copy</button>
+                            </div>
+                            <pre><code class="language-php">&lt;?php
+$curl = curl_init();
+curl_setopt_array($curl, [
+    CURLOPT_URL => "https://api.nearbyshop.xyz/tmn/redeem",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST => true,
+    CURLOPT_HTTPHEADER => [
+        "X-API-Key: nb_live_your_api_key_here",
+        "Content-Type: application/json"
+    ],
+    CURLOPT_POSTFIELDS => json_encode([
+        "voucher" => "https://gift.truemoney.com/campaign/?v=a1b2c3d4e5",
+        "phone" => "0812345678"
+    ])
+]);
+$response = curl_exec($curl);
+curl_close($curl);
+echo $response;
+?&gt;</code></pre>
+                        </div>
+
+                        <!-- Response Preview -->
+                        <h4>ตัวอย่างผลลัพธ์ (Response 200 OK)</h4>
+                        <div class="code-window">
+                            <div class="window-header">
+                                <div class="window-dots">
+                                    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                                </div>
+                                <span class="window-title">JSON Response (200 OK)</span>
+                                <button class="copy-btn" data-clipboard='{
+  "status": "success",
+  "success": true,
+  "message": "รับเงินจากซองสำเร็จ",
+  "data": {
+    "voucher_hash": "a1b2c3d4e5",
+    "owner_name": "สมชาย ใจดี",
+    "received_amount": 100.00,
+    "phone": "0812345678",
+    "redeemed_at": "2026-09-05T00:20:00.000Z"
+  }
+}'>Copy</button>
+                            </div>
+                            <pre><code class="language-json">{
+  "status": "success",
+  "success": true,
+  "message": "รับเงินจากซองสำเร็จ",
+  "data": {
+    "voucher_hash": "a1b2c3d4e5",
+    "owner_name": "สมชาย ใจดี",
+    "received_amount": 100.00,
+    "phone": "0812345678",
+    "redeemed_at": "2026-09-05T00:20:00.000Z"
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: TrueMoney Error Codes -->
+            <section id="tmn-errors" class="doc-section">
+                <h2>⚠️ รหัสข้อผิดพลาดของซอง (TrueMoney Error Codes)</h2>
+                <div class="content-block">
+                    <p>รหัสข้อผิดพลาดเฉพาะที่อาจเกิดขึ้นระหว่างการตรวจสอบหรือกดรับซองของขวัญ TrueMoney Wallet:</p>
+                    
+                    <div class="param-table-container">
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th>HTTP Status</th>
+                                    <th>Error Code</th>
+                                    <th>สาเหตุ / ความหมาย</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="status-pill status-400">400 Bad Request</span></td>
+                                    <td><code>VOUCHER_EXPIRED</code></td>
+                                    <td>ซองของขวัญหมดอายุแล้ว (ซอง TrueMoney มีอายุ 72 ชั่วโมงหลังจากสร้าง)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-pill status-400">400 Bad Request</span></td>
+                                    <td><code>VOUCHER_OUT_OF_STOCK</code></td>
+                                    <td>ซองของขวัญถูกกดรับเงินไปจนครบจำนวนสิทธิ์แล้ว</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-pill status-400">400 Bad Request</span></td>
+                                    <td><code>CANNOT_GET_OWN_VOUCHER</code></td>
+                                    <td>ไม่สามารถใช้เบอร์โทรศัพท์ของผู้สร้างซองในการกดรับซองของตัวเองได้</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-pill status-400">400 Bad Request</span></td>
+                                    <td><code>INVALID_PHONE_NUMBER</code></td>
+                                    <td>เบอร์โทรศัพท์ไม่ถูกต้อง หรือไม่ใช่เบอร์ TrueMoney Wallet ที่ลงทะเบียนไว้</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-pill status-400">404 Not Found</span></td>
+                                    <td><code>VOUCHER_NOT_FOUND</code></td>
+                                    <td>ไม่พบลิงก์หรือรหัสซองของขวัญนี้ในระบบ TrueMoney</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="doc-footer">
+                <p>&copy; 2026 xNearbyTeam. All rights reserved.</p>
+                <p>Status: <span class="badge post">Operational</span></p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

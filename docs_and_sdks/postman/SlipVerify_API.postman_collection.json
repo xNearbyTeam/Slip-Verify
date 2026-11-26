@@ -1,0 +1,209 @@
+{
+  "info": {
+    "_postman_id": "9a38f712-45e1-4c12-8822-slipverify001",
+    "name": "SlipVerify API",
+    "description": "Official Postman Collection for SlipVerify API - Automated Thai Bank Slip Verification (https://api.nearbyshop.xyz)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.nearbyshop.xyz",
+      "type": "string"
+    },
+    {
+      "key": "apiToken",
+      "value": "YOUR_JWT_API_TOKEN",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. POST /slipVerify/v2 (Auto OCR + Receiver Check) ⭐",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "slip",
+                  "type": "file",
+                  "description": "ไฟล์รูปภาพสลิปโอนเงิน (JPEG, PNG, WEBP)"
+                },
+                {
+                  "key": "expected_receiver_name",
+                  "value": "สมชาย ใจดี",
+                  "type": "text",
+                  "description": "ชื่อผู้รับเงินที่คาดหวัง (Optional)"
+                },
+                {
+                  "key": "expected_bank_code",
+                  "value": "KBANK",
+                  "type": "text",
+                  "description": "รหัสธนาคาร หรือตัวย่อ เช่น 004 หรือ KBANK (Optional)"
+                },
+                {
+                  "key": "expected_account_no",
+                  "value": "346",
+                  "type": "text",
+                  "description": "เลขบัญชีเต็ม หรือเลขท้าย 4 ตัว (Optional)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/slipVerify/v2",
+              "host": ["{{baseUrl}}"],
+              "path": ["slipVerify", "v2"]
+            }
+          }
+        },
+        {
+          "name": "2. POST /slipVerify/v1 (Image + Amount)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "qr_img",
+                  "type": "file",
+                  "description": "ไฟล์รูปภาพสลิปโอนเงิน"
+                },
+                {
+                  "key": "amount",
+                  "value": "100.00",
+                  "type": "text",
+                  "description": "จำนวนเงินที่ต้องการตรวจสอบ"
+                },
+                {
+                  "key": "expected_receiver_name",
+                  "value": "สมชาย ใจดี",
+                  "type": "text"
+                },
+                {
+                  "key": "expected_bank_code",
+                  "value": "KBANK",
+                  "type": "text"
+                },
+                {
+                  "key": "expected_account_no",
+                  "value": "346",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/slipVerify/v1",
+              "host": ["{{baseUrl}}"],
+              "path": ["slipVerify", "v1"]
+            }
+          }
+        },
+        {
+          "name": "3. POST /slipVerify/noSlip (QR Payload Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "qr_payload",
+                  "value": "0046000600000101030040225202609031200000462385o94634ugqprde5102TH910404C7",
+                  "type": "text"
+                },
+                {
+                  "key": "amount",
+                  "value": "100.00",
+                  "type": "text"
+                },
+                {
+                  "key": "expected_account_no",
+                  "value": "346",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/slipVerify/noSlip",
+              "host": ["{{baseUrl}}"],
+              "path": ["slipVerify", "noSlip"]
+            }
+          }
+        },
+        {
+          "name": "4. POST /tmn/verify (TrueMoney Check Voucher) 🎁",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"voucher\": \"https://gift.truemoney.com/campaign/?v=a1b2c3d4e5\",\n  \"phone\": \"0812345678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tmn/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["tmn", "verify"]
+            }
+          }
+        },
+        {
+          "name": "5. POST /tmn/redeem (TrueMoney Redeem Voucher) 💰",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"voucher\": \"https://gift.truemoney.com/campaign/?v=a1b2c3d4e5\",\n  \"phone\": \"0812345678\",\n  \"dryRun\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tmn/redeem",
+              "host": ["{{baseUrl}}"],
+              "path": ["tmn", "redeem"]
+            }
+          }
+        }
+  ]
+}
