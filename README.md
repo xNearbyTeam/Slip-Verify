@@ -1,194 +1,116 @@
-<div align="center">
+# Slip-Verify API — Official SDKs & Examples
 
-# 🛡️ SlipVerify API — Thai Bank Slip Verification
-### ระบบตรวจสอบสลิปธนาคารไทยอัตโนมัติ แม่นยำ รวดเร็ว พร้อม Client SDKs & Starter Kits
+ระบบ API สำหรับตรวจสอบความถูกต้องของสลิปโอนเงินธนาคารไทย (Thai Bank Slip Verification) รองรับทั้งการส่ง **QR Payload (`v1`)** และ **อัปโหลดรูปภาพสลิป (`v2`)** พร้อมระบบตรวจสอบบัญชีผู้รับเงินอัตโนมัติ (Receiver Validation)
 
-[![GitHub stars](https://img.shields.io/github/stars/xNearbyTeam/Slip-Verify?style=for-the-badge&color=6366f1)](https://github.com/xNearbyTeam/Slip-Verify/stargazers)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/VMr2pqukDX)
-[![API Status](https://img.shields.io/badge/API-Online%20(99.9%25)-10B981?style=for-the-badge)](https://api.nearbyshop.xyz)
-[![NodeJS](https://img.shields.io/badge/Node.js-SDK%20Available-339933?style=for-the-badge&logo=node.js&logoColor=white)](sdks/nodejs)
-[![Python](https://img.shields.io/badge/Python-SDK%20Available-3776AB?style=for-the-badge&logo=python&logoColor=white)](sdks/python)
-[![PHP](https://img.shields.io/badge/PHP-SDK%20Available-777BB4?style=for-the-badge&logo=php&logoColor=white)](sdks/php)
-
-<br/>
-
-[📖 ดูคู่มือ API ฉบับเต็ม (Docs)](https://api.nearbyshop.xyz) • [🔑 ขอรับ API Token (Discord)](https://discord.gg/VMr2pqukDX) • [🌐 เว็บไซต์หลัก](https://nearbyshop.xyz)
-
-</div>
+> 🌐 **Online Documentation:** https://docs.nearbyshop.xyz  
+> 🔗 **Base API URL:** `https://api.nearbyshop.xyz`
 
 ---
 
-## 📌 สารบัญ (Table of Contents)
-- [🌟 จุดเด่นของระบบ (Features)](#-จุดเด่นของระบบ-features)
-- [📦 Client SDKs & Modules (พร้อมใช้ทันที)](#-client-sdks--modules-พร้อมใช้ทันที)
-- [🌐 Web Demo & Starter Kits (ตัวอย่างโปรเจกต์)](#-web-demo--starter-kits-ตัวอย่างโปรเจกต์)
-- [🏦 ธนาคารที่รองรับ (Supported Banks)](#-ธนาคารที่รองรับ-supported-banks)
-- [🚀 ตัวอย่างการใช้งานด่วน (Quick Start)](#-ตัวอย่างการใช้งานด่วน-quick-start)
-  - [1. POST /slipVerify/v2 (Auto OCR + Receiver Check) ⭐](#1-post-slipverifyv2-auto-ocr--receiver-check-)
-  - [2. POST /slipVerify/v1 (รูปภาพ + จำนวนเงิน)](#2-post-slipverifyv1-รูปภาพ--จำนวนเงิน)
-  - [3. POST /slipVerify/noSlip (QR Payload เท่านั้น — เร็วที่สุด)](#3-post-slipverifynoslip-qr-payload-เท่านั้น--เร็วที่สุด)
-- [🛡️ ระบบตรวจสอบข้อมูลผู้รับเงิน (Receiver Validation)](#️-ระบบตรวจสอบข้อมูลผู้รับเงิน-receiver-validation)
-- [📮 Postman Collection](#-postman-collection)
-- [🔑 การยืนยันตัวตน (Authentication)](#-การยืนยันตัวตน-authentication)
-- [🏷️ Keywords / SEO Tags](#️-keywords--tags)
+## 📁 โครงสร้างภายใน Repository
 
----
-
-## 🌟 จุดเด่นของระบบ (Features)
-
-* ⚡ **ความเร็วสูงระดับ ~5.0 วินาที:** เชื่อมต่อตรงกับระบบธนาคาร พร้อมเทคโนโลยี Smart Caching ป้องกันการยิงซ้ำ
-* 🤖 **AI Smart OCR:** สกัดยอดเงินอัตโนมัติจากสลิปโอนเงินทุกธนาคารในประเทศไทยอย่างแม่นยำ
-* 🛡️ **Receiver Fraud Protection:** ตรวจสอบชื่อ-นามสกุล, รหัสธนาคาร และเลขบัญชีของผู้รับเงิน ป้องกันสลิปคนอื่นหรือโอนผิดบัญชี
-* 🧩 **Multi-Scale Adaptive QR Reader:** ถอดรหัส QR Code ได้แม้รูปสลิปจะเบลอ, ย่อส่วน, หรือความละเอียดสูงระดับ 4K
-* 🔒 **Anti-Replay & Anti-Spam:** บันทึก Transaction Hash ป้องกันการนำสลิปเก่ามาวนใช้ซ้ำ 100%
-
----
-
-## 📦 Client SDKs & Modules (พร้อมใช้ทันที)
-
-เราจัดเตรียม SDK สำเร็จรูปให้คุณนำไปติดตั้งและเรียกใช้ได้ใน **3 บรรทัด**:
-
-| ภาษา | โฟลเดอร์ SDK | ตัวอย่างการเรียกใช้เบื้องต้น |
-| :--- | :--- | :--- |
-| **Node.js / TS** | [`sdks/nodejs/`](sdks/nodejs) | `const res = await verifier.verifyV2('slip.jpg', { expected_bank_code: 'KBANK' });` |
-| **Python** | [`sdks/python/`](sdks/python) | `res = verifier.verify_v2('slip.jpg', expected_bank_code='KBANK')` |
-| **PHP** | [`sdks/php/`](sdks/php) | `$res = $verifier->verifyV2('slip.jpg', ['expected_bank_code' => 'KBANK']);` |
-
----
-
-## 🌐 Web Demo & Starter Kits (ตัวอย่างโปรเจกต์)
-
-สามารถเปิดดูหรือ Clone ตัวอย่างโปรเจกต์สำเร็จรูปไปต่อยอดได้ทันที:
-
-* 🌐 **[Web Demo UI (`web-demo/`)](web-demo):** หน้าเว็บ Dark Theme Minimal รองรับ Drag & Drop สลิป ตรวจสอบสดผ่านเบราว์เซอร์
-* 🤖 **[Discord Bot Example (`examples/discord-bot/`)](examples/discord-bot):** บอท Discord ตรวจสลิปอัตโนมัติในแชท + แจก Role ลูกค้าทันที
-* 📱 **[LINE OA Bot Example (`examples/line-oa-bot/`)](examples/line-oa-bot):** Webhook เชื่อมต่อ LINE Official Account ตรวจสลิปลูกค้าอัตโนมัติ
-
----
-
-## 🏦 ธนาคารที่รองรับ (Supported Banks)
-
-ระบบรองรับการตรวจสอบสลิปโอนเงินผ่าน PromptPay และธนาคารชั้นนำของไทยทุกแห่ง:
-
-| รหัสธนาคาร (Bank Code) | ตัวย่อ (Abbreviation) | ชื่อธนาคาร (Bank Name) |
-| :---: | :---: | :--- |
-| `004` | **KBANK** | ธนาคารกสิกรไทย (Kasikornbank) |
-| `014` | **SCB** | ธนาคารไทยพาณิชย์ (Siam Commercial Bank) |
-| `002` | **BBL** | ธนาคารกรุงเทพ (Bangkok Bank) |
-| `006` | **KTB** | ธนาคารกรุงไทย (Krungthai Bank) |
-| `025` | **BAY** | ธนาคารกรุงศรีอยุธยา (Bank of Ayudhya) |
-| `011` | **TTB** | ธนาคารทหารไทยธนชาต (TMBThanachart Bank) |
-| `030` | **GSB** | ธนาคารออมสิน (Government Savings Bank) |
-| `034` | **BAAC** | ธ.ก.ส. (Bank for Agriculture and Agricultural Cooperatives) |
-
----
-
-## 🚀 ตัวอย่างการใช้งานด่วน (Quick Start)
-
-### Base URL
 ```text
-https://api.nearbyshop.xyz
+slip-verify-sdk/
+├── sdks/
+│   ├── nodejs/        # Node.js SDK + TypeScript definitions
+│   ├── php/           # PHP SDK + ตัวอย่างการใช้งาน
+│   └── python/        # Python SDK + ตัวอย่างการใช้งาน
+├── examples/
+│   ├── discord-bot/   # ตัวอย่างบอท Discord ตรวจสลิปอัตโนมัติ
+│   └── line-oa-bot/   # ตัวอย่างบอท LINE OA ตรวจสลิป
+├── postman/           # Postman Collection สำหรับทดสอบ API
+└── web-demo/          # ตัวอย่างหน้าเว็บทดสอบอัปโหลดสลิป
 ```
 
 ---
 
-### 1. `POST /slipVerify/v2` (Auto OCR + Receiver Check) ⭐
+## 🔐 การยืนยันตัวตน (Authentication)
 
-> **แนะนำที่สุด:** แนบเพียงรูปสลิปอย่างเดียว ระบบจะอ่าน QR Code, สกัดยอดเงิน และตรวจสอบผู้รับเงินให้อัตโนมัติ
+ส่ง API Key หรือ Bearer Token ใน Header ทุก Request:
 
-#### 💻 cURL
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+---
+
+## 🚀 Endpoints หลัก
+
+### 1. ตรวจสอบสลิปด้วย QR Payload (`POST /slipVerify/v1`)
+เหมาะสำหรับระบบที่สแกน QR Code จากฝั่ง Client/App แล้วส่งเฉพาะข้อความ QR Payload มาตรวจสอบ (รวดเร็วที่สุด)
+
+**Request (`application/json` หรือ `multipart/form-data`):**
+```json
+{
+  "qr_payload": "0041000600000101030040220...",
+  "expected_account_no": "1234567890",
+  "expected_name": "สมชาย ใจดี"
+}
+```
+> *หมายเหตุ: `expected_account_no` และ `expected_name` เป็น optional สำหรับตรวจสอบผู้รับเงินปลายทาง*
+
+### 2. ตรวจสอบสลิปด้วยรูปภาพ (`POST /slipVerify/v2`)
+อัปโหลดไฟล์รูปภาพสลิปโดยตรง (`multipart/form-data`, field name: `slip`) ระบบจะอ่าน QR Code, ตรวจสอบความถูกต้องของรูปแบบ Mini-QR และยืนยันยอดเงินให้อัตโนมัติ
+
 ```bash
-curl -X POST https://api.nearbyshop.xyz/slipVerify/v2 \
-  -H "Authorization: Bearer YOUR_API_TOKEN" \
-  -F "slip=@slip.jpg" \
-  -F "expected_receiver_name=สมชาย ใจดี" \
-  -F "expected_bank_code=KBANK" \
-  -F "expected_account_no=346"
-```
-
-#### 🟩 Node.js (ใช้ SDK)
-```javascript
-const SlipVerifier = require('./sdks/nodejs/SlipVerifier');
-const verifier = new SlipVerifier('YOUR_API_TOKEN');
-
-const res = await verifier.verifyV2('slip.jpg', {
-    expected_receiver_name: 'สมชาย ใจดี',
-    expected_bank_code: 'KBANK',
-    expected_account_no: '346'
-});
-console.log(res.data);
-```
-
-#### 🐍 Python (ใช้ SDK)
-```python
-from sdks.python.slip_verifier import SlipVerifier
-
-verifier = SlipVerifier("YOUR_API_TOKEN")
-res = verifier.verify_v2(
-    slip="slip.jpg",
-    expected_receiver_name="สมชาย ใจดี",
-    expected_bank_code="KBANK",
-    expected_account_no="346"
-)
-print(res["data"])
+curl -X POST "https://api.nearbyshop.xyz/slipVerify/v2" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "slip=@/path/to/slip.jpg"
 ```
 
 ---
 
-### 2. `POST /slipVerify/v1` (รูปภาพ + จำนวนเงิน)
-```bash
-curl -X POST https://api.nearbyshop.xyz/slipVerify/v1 \
-  -H "Authorization: Bearer YOUR_API_TOKEN" \
-  -F "qr_img=@slip.jpg" \
-  -F "amount=100.00" \
-  -F "expected_bank_code=KBANK"
+## ✅ ตัวอย่าง Response เมื่อสำเร็จ (`200 OK`)
+
+```json
+{
+  "status": "success",
+  "request_id": "a1b2c3d4",
+  "data": {
+    "trans_id": "2026112701234567890",
+    "type": "TRANSFER",
+    "amount": 500.0,
+    "fee": 0.0,
+    "date_time": "2026-11-27T12:30:00+07:00",
+    "sender": {
+      "name": "นาย ก",
+      "bank": "ธนาคารกสิกรไทย",
+      "bank_code": "004",
+      "bank_abbr": "KBANK",
+      "account_no": "xxx-x-x1234-x"
+    },
+    "receiver": {
+      "name": "นาย ข",
+      "bank": "ธนาคารไทยพาณิชย์",
+      "bank_code": "014",
+      "bank_abbr": "SCB",
+      "details": {
+        "account_no": "xxx-x-x5678-x"
+      }
+    }
+  }
+}
 ```
 
 ---
 
-### 3. `POST /slipVerify/noSlip` (QR Payload เท่านั้น — เร็วที่สุด)
-```bash
-curl -X POST https://api.nearbyshop.xyz/slipVerify/noSlip \
-  -H "Authorization: Bearer YOUR_API_TOKEN" \
-  -F "qr_payload=0046000600000101030040225202609031200000462385o94634ugqprde5102TH910404C7" \
-  -F "amount=100.00" \
-  -F "expected_account_no=346"
-```
+## ⚠️ รหัส Error มาตรฐาน
+
+| HTTP Status | `code` | ความหมาย |
+|---|---|---|
+| `400` | `INVALID_QR_PAYLOAD` | รูปแบบ QR ไม่ถูกต้อง หรือไม่ใช่ QR สำหรับตรวจสอบสลิป |
+| `400` | `SLIP_NOT_FOUND` | ไม่พบข้อมูลสลิปในระบบธนาคาร |
+| `400` | `RECEIVER_MISMATCH` | บัญชี/ชื่อผู้รับเงินไม่ตรงกับที่กำหนดไว้ |
+| `401` / `403` | `UNAUTHORIZED` / `FORBIDDEN` | API Key ไม่ถูกต้อง หรือไม่มีสิทธิ์ใช้งาน |
+| `503` | `SERVICE_UNAVAILABLE` | ระบบตรวจสอบสลิปไม่พร้อมใช้งานชั่วคราว |
+| `503` | `MAINTENANCE_MODE` | ระบบปิดปรับปรุงชั่วคราว |
+| `504` | `UPSTREAM_TIMEOUT` | การเชื่อมต่อระบบธนาคารล่าช้า กรุณาลองใหม่อีกครั้ง |
 
 ---
 
-## 🛡️ ระบบตรวจสอบข้อมูลผู้รับเงิน (Receiver Validation)
+## 📦 เริ่มต้นใช้งาน SDK
 
-| พารามิเตอร์ | รูปแบบที่รองรับ | ตัวอย่างค่าที่ส่งได้ |
-| :--- | :--- | :--- |
-| `expected_receiver_name` | ชื่อเต็ม, นามสกุล, ตัดคำนำหน้าอัตโนมัติ, รองรับสลิปที่ธนาคารย่อนามสกุล | `"สมชาย ใจดี"`, `"สมชาย"`, `"นาย สมชาย"` |
-| `expected_bank_code` | Bank Code 3 หลัก หรือ ตัวย่อภาษาอังกฤษ (Case-insensitive) | `"004"`, `"KBANK"`, `"kbank"`, `"014"`, `"SCB"` |
-| `expected_account_no` | เลขบัญชีเต็ม (มี/ไม่มีขีด) หรือเลขท้าย 4 ตัว | `"067-8-999346"`, `"0678999346"`, `"346"` |
-
----
-
-## 📮 Postman Collection
-
-ดาวน์โหลดไฟล์ [`postman/SlipVerify_API.postman_collection.json`](postman/SlipVerify_API.postman_collection.json) แล้ว Import เข้าโปรแกรม Postman เพื่อเริ่มทดสอบยิง API ได้ทันทีใน 1 คลิก!
-
----
-
-## 🔑 การยืนยันตัวตน (Authentication)
-
-ระบบใช้ **JWT (JSON Web Token)** ในการรักษาความปลอดภัย คุณสามารถรับ Token ได้ฟรีโดย:
-
-1. เข้าร่วม [Discord Community](https://discord.gg/VMr2pqukDX)
-2. สร้าง Ticket หรือขอรับ Token สำหรับ SlipVerify API
-3. นำ Token มาใส่ใน Header: `Authorization: Bearer YOUR_API_TOKEN`
-
----
-
-## 🏷️ Keywords / Tags
-
-`slip-verify` `slip-verification` `thai-qr-promptpay` `promptpay-api` `bank-slip-verifier` `เช็คสลิป` `ตรวจสลิป` `สลิปปลอม` `เช็คสลิปโอนเงิน` `api-เช็คสลิป` `kbank-slip` `scb-slip` `slipok-alternative` `easyocr` `nodejs` `python` `php` `discord-bot`
-
----
-
-<div align="center">
-  <sub>Developed with ❤️ by <a href="https://nearbyshop.xyz">xNearbyTeam</a> • 2026</sub>
-</div>
+* **Node.js:** ดูตัวอย่างใน [`sdks/nodejs/`](./sdks/nodejs)
+* **PHP:** ดูตัวอย่างใน [`sdks/php/`](./sdks/php)
+* **Python:** ดูตัวอย่างใน [`sdks/python/`](./sdks/python)
+* **Postman:** นำเข้าไฟล์ [`postman/SlipVerify_API.postman_collection.json`](./postman/SlipVerify_API.postman_collection.json)

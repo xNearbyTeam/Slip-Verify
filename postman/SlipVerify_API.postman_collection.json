@@ -19,183 +19,77 @@
   ],
   "item": [
     {
-      "name": "Auth",
-      "item": [
-        {
-          "name": "1. Login (Get JWT Token)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "var jsonData = pm.response.json();",
-                  "if (jsonData.token) {",
-                  "    pm.collectionVariables.set('apiToken', jsonData.token);",
-                  "    console.log('Saved apiToken to collection variables');",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"username\": \"guest\",\n    \"password\": \"1234\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/admin/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "admin", "login"]
-            }
+      "name": "1. POST /slipVerify/v2 (Slip Image + Receiver Check) ⭐",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{apiToken}}",
+            "type": "text"
           }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "slip",
+              "type": "file",
+              "description": "ไฟล์รูปภาพสลิปโอนเงิน (JPEG, PNG, WEBP)"
+            },
+            {
+              "key": "expected_receiver_name",
+              "value": "สมชาย ใจดี",
+              "type": "text",
+              "description": "ชื่อผู้รับเงินที่คาดหวัง (Optional)"
+            },
+            {
+              "key": "expected_bank_code",
+              "value": "KBANK",
+              "type": "text",
+              "description": "รหัสธนาคาร หรือตัวย่อ เช่น 004 หรือ KBANK (Optional)"
+            },
+            {
+              "key": "expected_account_no",
+              "value": "346",
+              "type": "text",
+              "description": "เลขบัญชีเต็ม หรือเลขท้าย 4 ตัว (Optional)"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/slipVerify/v2",
+          "host": ["{{baseUrl}}"],
+          "path": ["slipVerify", "v2"]
         }
-      ]
+      }
     },
     {
-      "name": "Slip Verification",
-      "item": [
-        {
-          "name": "1. POST /slipVerify/v2 (Auto OCR + Receiver Check) ⭐",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{apiToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "slip",
-                  "type": "file",
-                  "description": "ไฟล์รูปภาพสลิปโอนเงิน (JPEG, PNG, WEBP)"
-                },
-                {
-                  "key": "expected_receiver_name",
-                  "value": "สมชาย ใจดี",
-                  "type": "text",
-                  "description": "ชื่อผู้รับเงินที่คาดหวัง (Optional)"
-                },
-                {
-                  "key": "expected_bank_code",
-                  "value": "KBANK",
-                  "type": "text",
-                  "description": "รหัสธนาคาร หรือตัวย่อ เช่น 004 หรือ KBANK (Optional)"
-                },
-                {
-                  "key": "expected_account_no",
-                  "value": "346",
-                  "type": "text",
-                  "description": "เลขบัญชีเต็ม หรือเลขท้าย 4 ตัว (Optional)"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/slipVerify/v2",
-              "host": ["{{baseUrl}}"],
-              "path": ["slipVerify", "v2"]
-            }
+      "name": "2. POST /slipVerify/v1 (QR Payload Only)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{apiToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
           }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"qr_payload\": \"0046000600000101030140225202609012aGaHuTYRrMykSQkh5102TH910462B0\",\n  \"expected_account_no\": \"346\"\n}"
         },
-        {
-          "name": "2. POST /slipVerify/v1 (Image + Amount)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{apiToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "qr_img",
-                  "type": "file",
-                  "description": "ไฟล์รูปภาพสลิปโอนเงิน"
-                },
-                {
-                  "key": "amount",
-                  "value": "100.00",
-                  "type": "text",
-                  "description": "จำนวนเงินที่ต้องการตรวจสอบ"
-                },
-                {
-                  "key": "expected_receiver_name",
-                  "value": "สมชาย ใจดี",
-                  "type": "text"
-                },
-                {
-                  "key": "expected_bank_code",
-                  "value": "KBANK",
-                  "type": "text"
-                },
-                {
-                  "key": "expected_account_no",
-                  "value": "346",
-                  "type": "text"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/slipVerify/v1",
-              "host": ["{{baseUrl}}"],
-              "path": ["slipVerify", "v1"]
-            }
-          }
-        },
-        {
-          "name": "3. POST /slipVerify/noSlip (QR Payload Only)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{apiToken}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "qr_payload",
-                  "value": "0046000600000101030040225202609031200000462385o94634ugqprde5102TH910404C7",
-                  "type": "text"
-                },
-                {
-                  "key": "amount",
-                  "value": "100.00",
-                  "type": "text"
-                },
-                {
-                  "key": "expected_account_no",
-                  "value": "346",
-                  "type": "text"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/slipVerify/noSlip",
-              "host": ["{{baseUrl}}"],
-              "path": ["slipVerify", "noSlip"]
-            }
-          }
+        "url": {
+          "raw": "{{baseUrl}}/slipVerify/v1",
+          "host": ["{{baseUrl}}"],
+          "path": ["slipVerify", "v1"]
         }
-      ]
+      }
     }
   ]
 }
